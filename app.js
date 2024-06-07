@@ -7,9 +7,9 @@
 
 
 
-
 //////////////////////////////////////// ENVIRONMENT SETTINGS
 require('dotenv').config();
+const { trackPageView, trackEvent } = require('./analytics');           //google analytics lib (g-tag)
 //////////////////////////////////////// END ENVIRONMENT SETTINGS
 
 
@@ -511,10 +511,14 @@ let root = async(req, res) => {
 
 
 app.use('/content/section/:sectionId', async(req, res) => {
+    trackPageView(req.url); // google analytics (g-tag)
+    
     await sectionquery(req, res).catch(err => { console.log(err) });
 });
 
 app.use('/api/', async(req, res) => {
+    trackPageView(req.url); // google analytics (g-tag)
+    
     let datas = await api(req, res).catch(err => { console.log(err) });
     
     res.send(datas) ;
@@ -558,7 +562,8 @@ app.use('/favicon.ico/', async (req, res) => {
 
 
 app.use('/', async(req, res) => {
-    
+    trackPageView(req.url); // google analytics (g-tag)
+
     //console.log(req.url) ;
     console.log('requesting >> ', req.url) ;
     await root(req, res).catch(err => { console.log(err) });
